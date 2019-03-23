@@ -3,6 +3,8 @@
 
 A fine blend of [Emotion][], theming, [MDX][], and React components
 
+**WIP/Experimental**
+
 ```sh
 npm i emotion-mdx
 ```
