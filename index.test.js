@@ -16,3 +16,17 @@ test('renders', () => {
   )
   expect(json).toMatchSnapshot()
 })
+
+test('renders with styles', () => {
+  const json = renderJSON(
+    <ComponentProvider
+      styles={{
+        h1: {
+          color: 'tomato'
+        }
+      }}>
+      <h1>Hello</h1>
+    </ComponentProvider>
+  )
+  expect(json).toMatchSnapshot()
+})

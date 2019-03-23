@@ -1,3 +1,4 @@
 docs
 babel.config.js
 index.test.js
+__snapshots__
