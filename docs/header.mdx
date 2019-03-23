@@ -1,0 +1,37 @@
+import { ComponentProvider } from '../index'
+
+export default props =>
+  <ComponentProvider
+    {...props}
+    styles={{
+      wrapper: {
+        color: 'black',
+        bg: 'gray',
+        p: 16,
+        maxWidth: 'none',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      },
+      h1: {
+        fontSize: 16,
+        margin: 0,
+      },
+      ul: {
+        listStyle: 'none',
+        margin: 0,
+        display: 'flex',
+      },
+      a: {
+        padding: 2,
+      }
+    }}>
+    <wrapper>
+      {props.children}
+    </wrapper>
+  </ComponentProvider>
+
+# emotion-mdx
+
+- [GitHub](https://github.com/jxnblk/emotion-mdx)
+- [Jxnblk](https://jxnblk.com)

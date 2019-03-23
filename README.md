@@ -1,7 +1,7 @@
 
 # emotion-mdx
 
-A fine blend of Emotion, theming, MDX, and React components
+A fine blend of [Emotion][], theming, [MDX][], and React components
 
 ```sh
 npm i emotion-mdx
@@ -34,6 +34,66 @@ export default props =>
 
 ## Styles
 
+The `styles` prop adds styles to child MDX elements, using `@emotion/styled`.
+
+```jsx
+<ComponentProvider
+  styles={{
+    h1: {
+      fontSize: 48,
+      color: 'tomato',
+    },
+  }}
+/>
+```
+
+Each style can pick up values from the `theme` object by passing a function.
+
+```jsx
+<ComponentProvider
+  theme={{
+    colors: {
+      primary: 'tomato',
+    }
+  }}
+  styles={{
+    h1: props => ({
+      color: props.theme.colors.primary,
+    })
+  }}
+/>
+```
+
+## Transforming Styles
+
+A `transform` function can be provided to transform the style object based on props.
+This can be used with libraries like [Styled System][] to quickly add theme-derived styles.
+
+```jsx
+const customTransform = style => props => {
+  const color = props.theme.colors[style.color] || style.color
+  const transformed = {
+    ...style,
+    color,
+  }
+  return transformed
+}
+
+export default props =>
+  <ComponentProvider
+    transform={customTransform}
+    theme={{
+      colors: {
+        primary: 'tomato',
+      },
+    }}
+    styles={{
+      h1: {
+        color: 'primary'
+      }
+    }}
+  />
+```
 
 
 ## Nesting Providers
@@ -92,5 +152,51 @@ export default props => {
 
 ## Theming
 
-- Can be used to create isolated themes for MDX documents
+Emotion MDX can be used to create isolated "theme" layout components for MDX documents.
+These component can encapsulate typography styles that will only apply to MDX elements.
+
+```jsx
+// example MDX theme
+import React from 'react'
+import { ComponentProvider } from 'emotion-mdx'
+
+const components = {
+  // MDX-specific component
+  wrapper: {
+    fontFamily: 'Roboto, system-ui, sans-serif',
+    lineHeight: 1.5,
+  },
+  h1: {
+    fontSize: 48,
+    fontWeight: 900,
+    lineHeight: 1.25,
+  },
+  h2: {
+    fontSize: 32,
+    lineHeight: 1.25,
+  }
+}
+
+export default props =>
+  <ComponentProvider
+    {...props}
+    components={components}
+  />
+```
+
+```mdx
+// example mdx file
+import Theme from './theme'
+export default Theme
+
+# Hello
+
+## We're styled!
+```
+
+MIT License
+
+[mdx]: https://mdxjs.com
+[emotion]: https://emotion.sh
+[styled system]: https://styled-system.com
 

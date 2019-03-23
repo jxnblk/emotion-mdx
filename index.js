@@ -30,60 +30,63 @@ const tags = [
   'strong',
   'delete',
   // mdx
-  // 'inlineCode',
-  // 'thematicBreak',
+  'inlineCode',
+  'thematicBreak',
 ]
 
-// defaults
-const theme = {
-  colors: {
-    text: '#345',
-    background: '#fff',
-    link: '#07c',
-  },
+const aliases = {
+  inlineCode: 'code',
+  thematicBreak: 'hr',
 }
 
+const alias = n => aliases[n] || n
+
+// defaults
 const components = {
   root: styled.div(),
   wrapper: styled.div(),
 }
 tags.forEach(tag => {
-  components[tag] = styled(tag)()
+  components[tag] = styled(alias(tag))()
 })
 
 const noop = n => n
 
 const baseContext = {
-  theme,
+  theme: {},
   components,
-  transform: noop
+  transform: undefined // noop
 }
 
 const Context = React.createContext(baseContext)
 
 const mergeStyles = (components, styles, transform = noop) => {
+  const next = { ...components}
   for (const key in styles) {
     const override = styles[key]
-    components[key] = styled(components[key] || key)(transform(override))
+    next[key] = styled(components[key] || alias(key))(transform(override))
   }
-  return components
+  return next
 }
 
-const mergeContexts = (outer = baseContext, inner, styles) => ({
-  ...outer,
-  theme: merge({}, outer.theme, inner.theme),
-  components: mergeStyles(
-    merge({}, outer.components, inner.components),
-    styles,
-    inner.transform || outer.transform
-  )
-})
+const mergeContexts = (outer = baseContext, inner, styles) => {
+  const transform = inner.transform || outer.transform
+  return merge({}, outer, {
+    transform,
+    theme: merge({}, outer.theme, inner.theme),
+    components: mergeStyles(
+      merge({}, outer.components, inner.components),
+      styles,
+      transform
+    )
+  })
+}
 
 export const ComponentProvider = ({
   theme,
   components,
   styles,
-  transform = noop,
+  transform,
   ...props
 }) => {
   const outer = useContext(Context)

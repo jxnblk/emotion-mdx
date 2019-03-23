@@ -1,6 +1,5 @@
 import React from 'react'
-import { Link } from 'gatsby'
-import { ComponentProvider, useComponents } from '../index'
+import { ComponentProvider } from '../index'
 import {
   compose,
   space,
@@ -11,7 +10,7 @@ import {
   lineHeight,
 } from 'styled-system'
 import pick from 'lodash.pick'
-import Hello from './hello.mdx'
+import Header from './header.mdx'
 import Readme from '../README.md'
 
 const system = compose(
@@ -62,11 +61,11 @@ const deepSystem = style => props => {
       [key]: deepSystem(val)(props)
     })
   }
-  // console.log(style, styles)
   return styles.filter(Boolean).filter(notEmpty)
 }
 
-const Header = props => {
+/*
+const _Header = props => {
   const UI = useComponents()
   return (
     <UI.root>
@@ -75,32 +74,63 @@ const Header = props => {
     </UI.root>
   )
 }
+*/
 
-const components = {
-  a: ({ href, ...props }) => <Link {...props} to={href} />
-}
+const Content = props =>
+  <ComponentProvider
+    {...props}
+    styles={{
+      wrapper: {
+        maxWidth: 1024,
+        margin: 'auto',
+        px: 32,
+        py: 64,
+      },
+      h1: {
+        fontSize: [5, 6, 7],
+      },
+      p: {
+        fontSize: [2, 3],
+      }
+    }}
+  />
 
 export default props => {
   return (
     <ComponentProvider
-      components={components}
+      theme={{
+        colors: {
+          link: '#07c',
+          gray: '#f0f6ff',
+        }
+      }}
       styles={{
-        wrapper: {
-          maxWidth: 768,
-          margin: 'auto',
-          padding: 32,
-        },
         a: {
-          color: 'tomato',
+          color: 'link',
         },
-        h1: {
-          color: 'tomato',
+        code: {
+          fontFamily: 'Menlo, monospace',
+          fontSize: 16,
+        },
+        pre: {
+          fontFamily: 'Menlo, monospace',
+          fontSize: 16,
+          p: 2,
+          color: 'link',
+          bg: 'gray',
+          overflowX: 'auto',
+        },
+        inlineCode: {
+          fontFamily: 'Menlo, monospace',
+          fontSize: 16,
+          color: 'link',
         }
       }}
       transform={deepSystem}>
       <Header />
-      <Hello />
-      <Readme />
+      <Content>
+        <Readme />
+      </Content>
     </ComponentProvider>
   )
 }
