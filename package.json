@@ -1,0 +1,44 @@
+{
+  "name": "emotion-mdx",
+  "version": "1.0.0-0",
+  "description": "A fine blend of Emotion, theming, MDX, and React components",
+  "main": "index.cjs.js",
+  "scripts": {
+    "prepare": "babel index.js -o index.cjs.js",
+    "test": "jest",
+    "start": "gx docs"
+  },
+  "keywords": [],
+  "author": "Brent Jackson <jxnblk@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@emotion/core": "^10.0.9",
+    "@emotion/styled": "^10.0.9",
+    "@mdx-js/mdx": "^1.0.0-alpha.9",
+    "@mdx-js/tag": "^1.0.0-alpha.6",
+    "emotion-theming": "^10.0.9",
+    "gx": "^2.0.0-18",
+    "jest": "^24.5.0",
+    "jest-emotion": "^10.0.9",
+    "lodash.pick": "^4.4.0",
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
+    "react-test-renderer": "^16.8.5",
+    "styled-system": "^4.0.6"
+  },
+  "peerDependencies": {
+    "@emotion/core": "^10.0.9",
+    "@emotion/styled": "^10.0.9",
+    "@mdx-js/mdx": "^1.0.0-alpha.7",
+    "@mdx-js/tag": "^1.0.0-alpha.6",
+    "emotion-theming": "^10.0.9"
+  },
+  "dependencies": {
+    "lodash.merge": "^4.6.1"
+  },
+  "jest": {
+    "snapshotSerializers": [
+      "jest-emotion"
+    ]
+  }
+}
