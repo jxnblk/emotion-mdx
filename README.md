@@ -152,6 +152,20 @@ export default props => {
 }
 ```
 
+## Styled Components
+
+The `Styled` component can be imported directly and works similarly to the `useComponents` hook.
+
+```jsx
+import React from 'react'
+import { Styled } from 'emotion-mdx'
+
+export default props =>
+  <Styled.div>
+    <Styled.h1>Hello</Styled.h1>
+  </Styled.div>
+```
+
 ## Theming
 
 Emotion MDX can be used to create isolated "theme" layout components for MDX documents.

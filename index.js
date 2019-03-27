@@ -32,6 +32,8 @@ const tags = [
   // mdx
   'inlineCode',
   'thematicBreak',
+  // extras
+  'div',
 ]
 
 const aliases = {
@@ -61,7 +63,7 @@ const baseContext = {
 const Context = React.createContext(baseContext)
 
 const mergeStyles = (components, styles, transform = noop) => {
-  const next = { ...components}
+  const next = { ...components }
   for (const key in styles) {
     const override = styles[key]
     next[key] = styled(components[key] || alias(key))(transform(override))
@@ -112,3 +114,25 @@ export const useComponents = (styles = {}) => {
   const context = mergeContexts(outer, {}, styles)
   return context.components
 }
+
+export const Styled = React.forwardRef(({
+  tag = 'div',
+  ...props
+}, ref) => {
+  const components = useComponents()
+  const type = components[tag] || 'div'
+  return React.createElement(type, {
+    ...props,
+    ref
+  })
+})
+
+tags.forEach(tag => {
+  Styled[tag] = React.forwardRef((props, ref) =>
+    React.createElement(Styled, {
+      ref,
+      tag,
+      ...props,
+    })
+  )
+})
