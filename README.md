@@ -36,15 +36,17 @@ export default props =>
 
 ## Styles
 
-The `styles` prop adds styles to child MDX elements, using `@emotion/styled`.
+The `theme.styles` object adds styles to child MDX elements, using `@emotion/styled`.
 
 ```jsx
 <ComponentProvider
-  styles={{
-    h1: {
-      fontSize: 48,
-      color: 'tomato',
-    },
+  theme={{
+    styles: {
+      h1: {
+        fontSize: 48,
+        color: 'tomato',
+      },
+    }
   }}
 />
 ```
@@ -56,12 +58,12 @@ Each style can pick up values from the `theme` object by passing a function.
   theme={{
     colors: {
       primary: 'tomato',
+    },
+    styles: {
+      h1: props => ({
+        color: props.theme.colors.primary,
+      })
     }
-  }}
-  styles={{
-    h1: props => ({
-      color: props.theme.colors.primary,
-    })
   }}
 />
 ```
@@ -88,10 +90,10 @@ export default props =>
       colors: {
         primary: 'tomato',
       },
-    }}
-    styles={{
-      h1: {
-        color: 'primary'
+      styles: {
+        h1: {
+          color: 'primary'
+        }
       }
     }}
   />
@@ -100,13 +102,13 @@ export default props =>
 
 ## Nesting Providers
 
-The `ComponentProvider` can be nested to make contextual changes to the `theme`, `components`, or `styles`.
+The `ComponentProvider` can be nested to make contextual changes to the `theme`, `components`, or `theme.styles`.
 
 ## Props
 
-- `theme` (object) Emotion theming object
 - `components` (object) React components to render MDX elements
-- `styles` (object) Nested style objects for each component, with access to the Emotion `theme` context
+- `theme` (object) Emotion theming object
+- `theme.styles` (object) Nested style objects for each component, with access to the Emotion `theme` context
 - `transform` (function) Optional function to transform styles
 
 ## useComponents

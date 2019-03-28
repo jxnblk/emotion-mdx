@@ -23,9 +23,11 @@ test('renders', () => {
 test('renders with styles', () => {
   const json = renderJSON(
     <ComponentProvider
-      styles={{
-        h1: {
-          color: 'tomato'
+      theme={{
+        styles: {
+          h1: {
+            color: 'tomato'
+          }
         }
       }}>
       <h1>Hello</h1>
@@ -40,12 +42,12 @@ test('renders with theme', () => {
       theme={{
         colors: {
           highlight: 'tomato',
+        },
+        styles: {
+          h1: props => ({
+            color: props.theme.colors.highlight,
+          })
         }
-      }}
-      styles={{
-        h1: props => ({
-          color: props.theme.colors.highlight,
-        })
       }}>
       <h1>Hello</h1>
     </ComponentProvider>
@@ -70,9 +72,11 @@ test('renders with useComponents', () => {
 test('creates non-standard components', () => {
   const json = renderJSON(
     <ComponentProvider
-      styles={{
-        sup: {
-          color: 'tomato'
+      theme={{
+        styles: {
+          sup: {
+            color: 'tomato'
+          }
         }
       }}>
       <sup>hey</sup>
