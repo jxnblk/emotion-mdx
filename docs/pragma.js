@@ -4,9 +4,11 @@ import { ComponentProvider } from '../index'
 
 export default props =>
   <ComponentProvider
-    styles={{
-      h1: {
-        color: 'tomato'
+    theme={{
+      styles: {
+        h1: {
+          color: 'tomato'
+        }
       }
     }}>
     <h1>Hello</h1>

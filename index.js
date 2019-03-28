@@ -30,6 +30,7 @@ const tags = [
   'strong',
   'delete',
   // mdx
+  'wrapper',
   'inlineCode',
   'thematicBreak',
   // extras
@@ -39,15 +40,13 @@ const tags = [
 const aliases = {
   inlineCode: 'code',
   thematicBreak: 'hr',
+  wrapper: 'div',
 }
 
 const alias = n => aliases[n] || n
 
 // defaults
-const components = {
-  root: styled.div(),
-  wrapper: styled.div(),
-}
+const components = {}
 tags.forEach(tag => {
   components[tag] = styled(alias(tag))()
 })
