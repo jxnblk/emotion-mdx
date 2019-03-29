@@ -1,8 +1,16 @@
 import React, { useContext } from 'react'
-import { ThemeProvider } from 'emotion-theming'
+import { jsx, ThemeContext } from '@emotion/core'
 import { MDXProvider } from '@mdx-js/react'
-import styled from '@emotion/styled'
 import merge from 'lodash.merge'
+
+const styled = (Tag, opts) => (style) =>
+  React.forwardRef((props, ref) => (
+    jsx(Tag, {
+      ...props,
+      ref,
+      css: style
+    })
+  ))
 
 const tags = [
   'p',
@@ -99,13 +107,13 @@ export const ComponentProvider = ({
   })
 
   return (
-    <ThemeProvider theme={context.theme}>
-      <MDXProvider components={context.components}>
-        <Context.Provider value={context}>
-          {props.children}
-        </Context.Provider>
-      </MDXProvider>
-    </ThemeProvider>
+    React.createElement(ThemeContext.Provider, { value: context.theme },
+      React.createElement(MDXProvider, { components: context.components },
+        React.createElement(Context.Provider, { value: context },
+          props.children
+        )
+      )
+    )
   )
 }
 
