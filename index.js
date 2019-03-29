@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { ThemeProvider } from 'emotion-theming'
-import { MDXProvider } from '@mdx-js/tag'
+import { MDXProvider } from '@mdx-js/react'
 import styled from '@emotion/styled'
 import merge from 'lodash.merge'
 
