@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { ThemeProvider } from 'emotion-theming'
-import { MDXProvider } from '@mdx-js/tag'
+import { MDXProvider } from '@mdx-js/react'
 import styled from '@emotion/styled'
 import merge from 'lodash.merge'
 
@@ -30,6 +30,7 @@ const tags = [
   'strong',
   'delete',
   // mdx
+  'wrapper',
   'inlineCode',
   'thematicBreak',
   // extras
@@ -39,15 +40,13 @@ const tags = [
 const aliases = {
   inlineCode: 'code',
   thematicBreak: 'hr',
+  wrapper: 'div',
 }
 
 const alias = n => aliases[n] || n
 
 // defaults
-const components = {
-  root: styled.div(),
-  wrapper: styled.div(),
-}
+const components = {}
 tags.forEach(tag => {
   components[tag] = styled(alias(tag))()
 })
@@ -60,7 +59,7 @@ const baseContext = {
   transform: undefined // noop
 }
 
-const Context = React.createContext(baseContext)
+export const Context = React.createContext(baseContext)
 
 const mergeStyles = (components, styles, transform = noop) => {
   const next = { ...components }
@@ -71,11 +70,13 @@ const mergeStyles = (components, styles, transform = noop) => {
   return next
 }
 
-const mergeContexts = (outer = baseContext, inner, styles) => {
+const mergeContexts = (outer = baseContext, inner) => {
   const transform = inner.transform || outer.transform
+  const theme = merge({}, outer.theme, inner.theme)
+  const styles = theme.styles
   return merge({}, outer, {
     transform,
-    theme: merge({}, outer.theme, inner.theme),
+    theme,
     components: mergeStyles(
       merge({}, outer.components, inner.components),
       styles,
@@ -87,7 +88,6 @@ const mergeContexts = (outer = baseContext, inner, styles) => {
 export const ComponentProvider = ({
   theme,
   components,
-  styles,
   transform,
   ...props
 }) => {
@@ -96,7 +96,7 @@ export const ComponentProvider = ({
     theme,
     components,
     transform,
-  }, styles)
+  })
 
   return (
     <ThemeProvider theme={context.theme}>
@@ -111,7 +111,11 @@ export const ComponentProvider = ({
 
 export const useComponents = (styles = {}) => {
   const outer = useContext(Context)
-  const context = mergeContexts(outer, {}, styles)
+  const context = mergeContexts(outer, {
+    theme: {
+      styles
+    }
+  })
   return context.components
 }
 
