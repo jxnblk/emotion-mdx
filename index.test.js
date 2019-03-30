@@ -1,5 +1,4 @@
-/** @jsx mdx */
-import mdx from '@mdx-js/mdx/create-element'
+import mdx from '@mdx-js/react/create-element'
 import renderer from 'react-test-renderer'
 import { matchers } from 'jest-emotion'
 import {
@@ -13,33 +12,34 @@ const renderJSON = el => renderer.create(el).toJSON()
 
 test('renders', () => {
   const json = renderJSON(
-    <ComponentProvider>
-      <h1>Hello</h1>
-    </ComponentProvider>
+    mdx(ComponentProvider, null,
+      mdx('h1', null, 'Hello')
+    )
   )
   expect(json).toMatchSnapshot()
 })
 
 test('renders with styles', () => {
   const json = renderJSON(
-    <ComponentProvider
-      theme={{
+    mdx(ComponentProvider, {
+      theme: {
         styles: {
           h1: {
             color: 'tomato'
           }
         }
-      }}>
-      <h1>Hello</h1>
-    </ComponentProvider>
+      }
+    },
+      mdx('h1', null, 'Hello')
+    )
   )
   expect(json).toMatchSnapshot()
 })
 
 test('renders with theme', () => {
   const json = renderJSON(
-    <ComponentProvider
-      theme={{
+    mdx(ComponentProvider, {
+      theme: {
         colors: {
           highlight: 'tomato',
         },
@@ -48,9 +48,10 @@ test('renders with theme', () => {
             color: props.theme.colors.highlight,
           })
         }
-      }}>
-      <h1>Hello</h1>
-    </ComponentProvider>
+      }
+    },
+      mdx('h1', null, 'Hello')
+    )
   )
 })
 
@@ -61,9 +62,9 @@ test('renders with useComponents', () => {
     return false
   }
   const json = renderJSON(
-    <ComponentProvider>
-      <Beep />
-    </ComponentProvider>
+    mdx(ComponentProvider, null,
+      mdx(Beep)
+    )
   )
   expect(typeof components).toBe('object')
   expect(components.h1).toBeTruthy()
@@ -71,16 +72,17 @@ test('renders with useComponents', () => {
 
 test('creates non-standard components', () => {
   const json = renderJSON(
-    <ComponentProvider
-      theme={{
+    mdx(ComponentProvider, {
+      theme: {
         styles: {
           sup: {
             color: 'tomato'
           }
         }
-      }}>
-      <sup>hey</sup>
-    </ComponentProvider>
+      }
+    },
+      mdx('sup', null, 'hey')
+    )
   )
   expect(json).toMatchSnapshot()
   expect(json).toHaveStyleRule('color', 'tomato')

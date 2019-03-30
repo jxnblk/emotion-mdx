@@ -15,7 +15,6 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
-    "@babel/preset-react": "^7.0.0",
     "@emotion/core": "^10.0.10",
     "@mdx-js/mdx": "^1.0.0-alpha.16",
     "@mdx-js/react": "^1.0.0-alpha.16",
