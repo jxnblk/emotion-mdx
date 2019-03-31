@@ -44,8 +44,8 @@ test('renders with theme', () => {
           highlight: 'tomato',
         },
         styles: {
-          h1: props => ({
-            color: props.theme.colors.highlight,
+          h1: theme => ({
+            color: theme.colors.highlight,
           })
         }
       }

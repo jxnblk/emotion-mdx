@@ -8,7 +8,9 @@ const styled = (Tag, opts) => (style) =>
     jsx(Tag, {
       ...props,
       ref,
-      css: style
+      css: theme => typeof style === 'function'
+        ? style(theme)
+        : style,
     })
   ))
 
