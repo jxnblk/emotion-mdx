@@ -67,7 +67,7 @@ const baseContext = {
   transform: undefined // noop
 }
 
-const Context = React.createContext(baseContext)
+export const Context = React.createContext(baseContext)
 
 const mergeStyles = (components, styles, transform = noop) => {
   const next = { ...components }
