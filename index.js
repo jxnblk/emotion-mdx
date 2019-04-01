@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
+import { jsx } from '@emotion/core'
 import { ThemeProvider } from 'emotion-theming'
 import { MDXProvider } from '@mdx-js/react'
-import styled from '@emotion/styled'
 import merge from 'lodash.merge'
+import get from 'lodash.get'
 
 const tags = [
   'p',
@@ -45,45 +46,52 @@ const aliases = {
 
 const alias = n => aliases[n] || n
 
-// defaults
-const components = {}
-tags.forEach(tag => {
-  components[tag] = styled(alias(tag))()
+const themed = key => theme => theme.css(get(theme, `styles.${key}`))(theme)
+
+const styled = (tag, key) => props => jsx(alias(tag), {
+  ...props,
+  css: themed(key)
 })
 
-const noop = n => n
+const components = {}
 
-const baseContext = {
-  theme: {},
-  components,
-  transform: undefined // noop
-}
+export const Styled = React.forwardRef(({
+  tag = 'div',
+  ...props
+}, ref) => {
+  const components = useComponents()
+  const type = components[tag] || 'div'
+  return jsx(type, { ...props, ref })
+})
 
-export const Context = React.createContext(baseContext)
+const createStyled = tag => React.forwardRef((props, ref) =>
+  jsx(Styled, { ref, tag, ...props })
+)
 
-const mergeStyles = (components, styles, transform = noop) => {
-  const next = { ...components }
-  for (const key in styles) {
-    const override = styles[key]
-    next[key] = styled(components[key] || alias(key))(transform(override))
-  }
+tags.forEach(tag => {
+  components[tag] = styled(tag, tag)
+  Styled[tag] = createStyled(tag)
+})
+
+const createComponents = (components = {}) => {
+  const next = {}
+  Object.keys(components).forEach(key => {
+    next[key] = styled(components[key], key)
+    Styled[key] = createStyled(key)
+  })
   return next
 }
 
-const mergeContexts = (outer = baseContext, inner) => {
-  const transform = inner.transform || outer.transform
-  const theme = merge({}, outer.theme, inner.theme)
-  const styles = theme.styles
-  return merge({}, outer, {
-    transform,
-    theme,
-    components: mergeStyles(
-      merge({}, outer.components, inner.components),
-      styles,
-      transform
-    )
-  })
+const noop = n => () => n
+
+const baseContext = {
+  theme: {
+    css: noop,
+  },
+  components,
 }
+
+export const Context = React.createContext(baseContext)
 
 export const ComponentProvider = ({
   theme,
@@ -92,10 +100,11 @@ export const ComponentProvider = ({
   ...props
 }) => {
   const outer = useContext(Context)
-  const context = mergeContexts(outer, {
-    theme,
-    components,
-    transform,
+  const context = merge({}, outer, {
+    theme: merge({}, theme, {
+      css: transform,
+    }),
+    components: createComponents(components),
   })
 
   return (
@@ -109,34 +118,7 @@ export const ComponentProvider = ({
   )
 }
 
-export const useComponents = (styles = {}) => {
-  const outer = useContext(Context)
-  const context = mergeContexts(outer, {
-    theme: {
-      styles
-    }
-  })
+export const useComponents = () => {
+  const context = useContext(Context)
   return context.components
 }
-
-export const Styled = React.forwardRef(({
-  tag = 'div',
-  ...props
-}, ref) => {
-  const components = useComponents()
-  const type = components[tag] || 'div'
-  return React.createElement(type, {
-    ...props,
-    ref
-  })
-})
-
-tags.forEach(tag => {
-  Styled[tag] = React.forwardRef((props, ref) =>
-    React.createElement(Styled, {
-      ref,
-      tag,
-      ...props,
-    })
-  )
-})

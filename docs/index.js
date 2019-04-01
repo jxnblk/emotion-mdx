@@ -54,7 +54,7 @@ export default props => {
             fontSize: 16,
             color: 'link',
           }
-        }
+        },
       }}
       transform={css}>
       <Header />

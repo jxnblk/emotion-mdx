@@ -4,6 +4,7 @@ import renderer from 'react-test-renderer'
 import { matchers } from 'jest-emotion'
 import {
   ComponentProvider,
+  Styled,
   useComponents,
 } from './index'
 
@@ -36,24 +37,6 @@ test('renders with styles', () => {
   expect(json).toMatchSnapshot()
 })
 
-test('renders with theme', () => {
-  const json = renderJSON(
-    <ComponentProvider
-      theme={{
-        colors: {
-          highlight: 'tomato',
-        },
-        styles: {
-          h1: props => ({
-            color: props.theme.colors.highlight,
-          })
-        }
-      }}>
-      <h1>Hello</h1>
-    </ComponentProvider>
-  )
-})
-
 test('renders with useComponents', () => {
   let components
   const Beep = props => {
@@ -72,6 +55,9 @@ test('renders with useComponents', () => {
 test('creates non-standard components', () => {
   const json = renderJSON(
     <ComponentProvider
+      components={{
+        sup: 'sup',
+      }}
       theme={{
         styles: {
           sup: {
@@ -83,5 +69,26 @@ test('creates non-standard components', () => {
     </ComponentProvider>
   )
   expect(json).toMatchSnapshot()
+  expect(json).toHaveStyleRule('color', 'tomato')
+})
+
+test('styles React components', () => {
+  const Beep = props => <h2 {...props}>Boop</h2>
+  const json = renderJSON(
+    <ComponentProvider
+      components={{
+        Beep: props => <h2 {...props}>Boop</h2>
+      }}
+      theme={{
+        styles: {
+          Beep: {
+            color: 'tomato'
+          }
+        }
+      }}>
+      <Styled tag='Beep' />
+    </ComponentProvider>
+  )
+  expect(json.type).toBe('h2')
   expect(json).toHaveStyleRule('color', 'tomato')
 })
