@@ -12,7 +12,7 @@ npm i emotion-mdx
 You'll also need the following:
 
 ```sh
-npm i @emotion/core emotion-theming @mdx-js/mdx @mdx-js/react
+npm i @emotion/core emotion-theming @mdx-js/mdx@next @mdx-js/react@next
 ```
 
 Emotion MDX is a context provider meant to be a complete replacement for both the `MDXProvider` and `ThemeProvider`.
