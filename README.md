@@ -12,7 +12,7 @@ npm i emotion-mdx
 You'll also need the following:
 
 ```sh
-npm i @emotion/core @emotion/styled emotion-theming @mdx-js/mdx @mdx-js/tag
+npm i @emotion/core emotion-theming @mdx-js/mdx @mdx-js/tag
 ```
 
 Emotion MDX is a context provider meant to be a complete replacement for both the `MDXProvider` and `ThemeProvider`.
@@ -36,7 +36,7 @@ export default props =>
 
 ## Styles
 
-The `theme.styles` object adds styles to child MDX elements, using `@emotion/styled`.
+The `theme.styles` object adds styles to child MDX elements.
 
 ```jsx
 <ComponentProvider
@@ -51,41 +51,19 @@ The `theme.styles` object adds styles to child MDX elements, using `@emotion/sty
 />
 ```
 
-Each style can pick up values from the `theme` object by passing a function.
-
-```jsx
-<ComponentProvider
-  theme={{
-    colors: {
-      primary: 'tomato',
-    },
-    styles: {
-      h1: props => ({
-        color: props.theme.colors.primary,
-      })
-    }
-  }}
-/>
-```
-
 ## Transforming Styles
 
-A `transform` function can be provided to transform the style object based on props.
+A `transform` function can be provided to transform the style object based on the theme.
 This can be used with libraries like [Styled System][] to quickly add theme-derived styles.
 
 ```jsx
-const customTransform = style => props => {
-  const color = props.theme.colors[style.color] || style.color
-  const transformed = {
-    ...style,
-    color,
-  }
-  return transformed
-}
+import React from 'react'
+import { ComponentProvider } from 'emotion-mdx'
+import css from '@styled-system/css'
 
 export default props =>
   <ComponentProvider
-    transform={customTransform}
+    transform={css}
     theme={{
       colors: {
         primary: 'tomato',
@@ -99,6 +77,11 @@ export default props =>
   />
 ```
 
+The `transform` function should accept `styles` as an argument and return a function that accepts `theme` as an argument.
+
+```js
+transform(styles)(theme)
+```
 
 ## Nesting Providers
 
@@ -121,30 +104,6 @@ import { useComponents } from 'emotion-mdx'
 
 export default props => {
   const Styled = useComponents()
-  return (
-    <>
-      <Styled.h1>Hello</Styled.h1>
-      <Styled.p>I'm themed</Styled.p>
-    </>
-  )
-}
-```
-
-The `useComponents` hook accepts a `styles` object argument to make optional contextual overrides.
-
-```jsx
-// with component-level overrides
-import React from 'react'
-import { useComponents } from 'emotion-mdx'
-
-export default props => {
-  const Styled = useComponents({
-    // override the h1 component's defaults
-    h1: props => ({
-      fontSize: props.theme.fontSizes[4],
-      color: 'tomato'
-    })
-  })
   return (
     <>
       <Styled.h1>Hello</Styled.h1>
@@ -178,27 +137,28 @@ These component can encapsulate typography styles that will only apply to MDX el
 import React from 'react'
 import { ComponentProvider } from 'emotion-mdx'
 
-const components = {
-  // MDX-specific component
-  wrapper: {
-    fontFamily: 'Roboto, system-ui, sans-serif',
-    lineHeight: 1.5,
-  },
-  h1: {
-    fontSize: 48,
-    fontWeight: 900,
-    lineHeight: 1.25,
-  },
-  h2: {
-    fontSize: 32,
-    lineHeight: 1.25,
+const theme = {
+  styles: {
+    wrapper: {
+      fontFamily: 'Roboto, system-ui, sans-serif',
+      lineHeight: 1.5,
+    },
+    h1: {
+      fontSize: 48,
+      fontWeight: 900,
+      lineHeight: 1.25,
+    },
+    h2: {
+      fontSize: 32,
+      lineHeight: 1.25,
+    }
   }
 }
 
 export default props =>
   <ComponentProvider
     {...props}
-    components={components}
+    theme={theme}
   />
 ```
 

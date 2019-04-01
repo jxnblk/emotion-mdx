@@ -36,24 +36,6 @@ test('renders with styles', () => {
   expect(json).toMatchSnapshot()
 })
 
-test('renders with theme', () => {
-  const json = renderJSON(
-    <ComponentProvider
-      theme={{
-        colors: {
-          highlight: 'tomato',
-        },
-        styles: {
-          h1: props => ({
-            color: props.theme.colors.highlight,
-          })
-        }
-      }}>
-      <h1>Hello</h1>
-    </ComponentProvider>
-  )
-})
-
 test('renders with useComponents', () => {
   let components
   const Beep = props => {
@@ -72,6 +54,9 @@ test('renders with useComponents', () => {
 test('creates non-standard components', () => {
   const json = renderJSON(
     <ComponentProvider
+      components={{
+        sup: 'sup',
+      }}
       theme={{
         styles: {
           sup: {

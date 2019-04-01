@@ -39,6 +39,7 @@
     "emotion-theming": "^10.0.9"
   },
   "dependencies": {
+    "lodash.get": "^4.4.2",
     "lodash.merge": "^4.6.1"
   },
   "jest": {
