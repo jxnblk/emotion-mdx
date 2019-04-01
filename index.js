@@ -48,25 +48,39 @@ const alias = n => aliases[n] || n
 
 const themed = key => theme => theme.css(get(theme, `styles.${key}`))(theme)
 
-
-const styled = (tag) => props => jsx(alias(tag), {
+const styled = (tag, key) => props => jsx(alias(tag), {
   ...props,
-  css: themed(tag)
+  css: themed(key)
+})
+
+const components = {}
+
+export const Styled = React.forwardRef(({
+  tag = 'div',
+  ...props
+}, ref) => {
+  const components = useComponents()
+  const type = components[tag] || 'div'
+  return jsx(type, { ...props, ref })
+})
+
+const createStyled = tag => React.forwardRef((props, ref) =>
+  jsx(Styled, { ref, tag, ...props })
+)
+
+tags.forEach(tag => {
+  components[tag] = styled(tag, tag)
+  Styled[tag] = createStyled(tag)
 })
 
 const createComponents = (components = {}) => {
   const next = {}
   Object.keys(components).forEach(key => {
-    next[key] = styled(key)
+    next[key] = styled(components[key], key)
+    Styled[key] = createStyled(key)
   })
   return next
 }
-
-const components = {}
-
-tags.forEach(tag => {
-  components[tag] = styled(tag)
-})
 
 const noop = n => () => n
 
@@ -108,25 +122,3 @@ export const useComponents = () => {
   const context = useContext(Context)
   return context.components
 }
-
-export const Styled = React.forwardRef(({
-  tag = 'div',
-  ...props
-}, ref) => {
-  const components = useComponents()
-  const type = components[tag] || 'div'
-  return jsx(type, {
-    ...props,
-    ref
-  })
-})
-
-tags.forEach(tag => {
-  Styled[tag] = React.forwardRef((props, ref) =>
-    jsx(Styled, {
-      ref,
-      tag,
-      ...props,
-    })
-  )
-})
