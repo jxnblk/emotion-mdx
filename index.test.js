@@ -92,3 +92,21 @@ test('styles React components', () => {
   expect(json.type).toBe('h2')
   expect(json).toHaveStyleRule('color', 'tomato')
 })
+
+test('components accept an `as` prop', () => {
+  const Beep = props => <h2 {...props} />
+  const json = renderJSON(
+    <ComponentProvider
+      theme={{
+        styles: {
+          h1: {
+            color: 'tomato',
+          }
+        }
+      }}>
+      <Styled.h1 as={Beep}>Beep boop</Styled.h1>
+    </ComponentProvider>
+  )
+  expect(json.type).toBe('h2')
+  expect(json).toHaveStyleRule('color', 'tomato')
+})
