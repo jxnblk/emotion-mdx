@@ -1,5 +1,5 @@
 /** @jsx mdx */
-import mdx from '@mdx-js/react/create-element'
+import { mdx } from '@mdx-js/react'
 import renderer from 'react-test-renderer'
 import { matchers } from 'jest-emotion'
 import {
