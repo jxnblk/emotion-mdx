@@ -1,4 +1,6 @@
 
+**DEPRECATED** See https://theme-ui.com
+
 # emotion-mdx
 
 A fine blend of [Emotion][], theming, [MDX][], and React components
